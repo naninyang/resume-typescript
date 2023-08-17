@@ -1,18 +1,23 @@
-import { verify } from 'jsonwebtoken';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import { verify } from 'jsonwebtoken';
 import { JWT_SECRET } from '@/components/hooks/envs';
 
-export default async function handler(req, res) {
+const prisma = new PrismaClient();
+
+interface JwtPayload {
+  userId: number;
+  [key: string]: any;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     res.status(401).send({ message: 'Unauthorized' });
     return;
   }
-
-  const payload = verify(token, JWT_SECRET);
+  const payload = verify(token, JWT_SECRET!) as JwtPayload;
   const userId = payload.id;
-
-  const prisma = new PrismaClient();
 
   switch (req.method) {
     case 'GET':

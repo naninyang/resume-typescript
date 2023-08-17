@@ -1,19 +1,25 @@
 import { verify } from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_SECRET } from '@/components/hooks/envs';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
-  const getUserId = (req) => {
+interface JwtPayload {
+  id: number;
+  [key: string]: any;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const getUserId = (req: NextApiRequest): number | null => {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return null;
-    const payload = verify(token, JWT_SECRET);
+    const payload = verify(token, JWT_SECRET!) as JwtPayload;
     return payload.id;
   };
 
-  const { careerId } = req.query;
-  const userId = getUserId(req);
+  const careerIdString: string | string[] | undefined = req.query.careerId;
+  const userId: number | null = getUserId(req);
 
   if (!userId) {
     res.status(401).send({ message: 'Unauthorized' });
@@ -23,8 +29,16 @@ export default async function handler(req, res) {
   switch (req.method) {
     case 'PUT':
       try {
+        const careerIdString = req.query.careerId;
+
+        if (typeof careerIdString !== 'string') {
+          return res.status(400).send({ message: 'Invalid careerId' });
+        }
+
+        const careerId = parseInt(careerIdString);
+
         const updatedCareer = await prisma.career.update({
-          where: { id: parseInt(careerId) },
+          where: { id: careerId },
           data: {
             org_name: req.body.org_name,
             team: req.body.team,
@@ -36,6 +50,7 @@ export default async function handler(req, res) {
             userId,
           },
         });
+
         res.json(updatedCareer);
       } catch (error) {
         console.error(error);
@@ -47,7 +62,7 @@ export default async function handler(req, res) {
       try {
         const projects = await prisma.project.findMany({
           where: {
-            careerId: Number(careerId),
+            careerId: Number(careerIdString),
           },
         });
 
@@ -61,7 +76,7 @@ export default async function handler(req, res) {
 
         await prisma.career.delete({
           where: {
-            id: Number(careerId),
+            id: Number(careerIdString),
           },
         });
 
