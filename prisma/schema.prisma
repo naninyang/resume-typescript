@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id                Int                @id @default(autoincrement())
+  userid            String             @unique
+  username          String
+  email             String             @unique
+  telephone         String?            @unique
+  password          String
+  address           String?
+  veteran           String?
+  disability        String?
+  username_show     Boolean?           @default(false)
+  email_show        Boolean?           @default(false)
+  educations        education[]
+  military_services military_service[]
+  activities        activity[]
+  languages         language[]
+  awards            award[]
+  certificates      certificate[]
+  skills            skill[]
+  references        reference[]
+  careers           career[]
+  essays            essay[]
+}
+
+model education {
+  id         Int     @id @default(autoincrement())
+  school     String  @unique
+  major      String
+  category   String
+  stats      String
+  degree     String?
+  degree_num String?
+  record     String?
+  start_date String
+  end_date   String?
+  userId     Int?
+  user       user?   @relation(fields: [userId], references: [id])
+}
+
+model military_service {
+  id                     Int      @id @default(autoincrement())
+  military_stats         Boolean? @default(false)
+  military_show          Boolean? @default(false)
+  conscription_exemption String?
+  military_group         String?
+  start_date             String?
+  end_date               String?
+  rank                   String?
+  branch                 String?
+  discharge              String?
+  userId                 Int?     @unique
+  user                   user?    @relation(fields: [userId], references: [id])
+}
+
+model activity {
+  id             Int     @id @default(autoincrement())
+  organization   String?
+  position       String?
+  description    String?
+  classification String?
+  start_date     String?
+  start_time     String?
+  end_date       String?
+  end_time       String?
+  userId         Int?
+  user           user?   @relation(fields: [userId], references: [id])
+}
+
+model language {
+  id        Int     @id @default(autoincrement())
+  lang_name String?
+  exam_name String?
+  point     Int?
+  userId    Int?
+  user      user?   @relation(fields: [userId], references: [id])
+}
+
+model award {
+  id           Int     @id @default(autoincrement())
+  award_name   String?
+  description  String?
+  issue_date   String?
+  organization String?
+  userId       Int?
+  user         user?   @relation(fields: [userId], references: [id])
+}
+
+model certificate {
+  id               Int    @id @default(autoincrement())
+  certificate_name String @unique
+  organization     String
+  issue_date       String
+  certificate_num  String
+  userId           Int?
+  user             user?  @relation(fields: [userId], references: [id])
+}
+
+model skill {
+  id           Int    @id @default(autoincrement())
+  skill_name   String @unique
+  skill_level  Int
+  skill_career Int
+  userId       Int?
+  user         user?  @relation(fields: [userId], references: [id])
+}
+
+model reference {
+  id        Int     @id @default(autoincrement())
+  github    String?
+  velog     String?
+  instagram String?
+  twitter   String?
+  facebook  String?
+  leadme    String?
+  brunch    String?
+  tistory   String?
+  pinterest String?
+  linkedin  String?
+  dribble   String?
+  postype   String?
+  blog      String?
+  homepage  String?
+  userId    Int?    @unique
+  user      user?   @relation(fields: [userId], references: [id])
+}
+
+model career {
+  id          Int       @id @default(autoincrement())
+  org_name    String
+  team        String
+  role        String
+  occupation  String
+  start_date  String
+  end_date    String?
+  description String?
+  userId      Int?
+  user        user?     @relation(fields: [userId], references: [id])
+  projects    project[]
+}
+
+model project {
+  id           Int     @id @default(autoincrement())
+  project_name String  @unique
+  start_date   String
+  end_date     String?
+  description  String?
+  careerId     Int?
+  career       career? @relation(fields: [careerId], references: [id])
+}
+
+model essay {
+  id             Int      @id @default(autoincrement())
+  avatar_name    String?
+  avatar_path    String?
+  avatar_type    String?
+  eng_name       String?
+  eng_occupation String?
+  title          String
+  bio            String
+  show           Boolean? @default(false)
+  userId         Int?     @unique
+  user           user?    @relation(fields: [userId], references: [id])
+}
