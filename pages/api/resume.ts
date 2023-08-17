@@ -16,14 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   let userId: number;
+
   try {
     const payload = verify(token, JWT_SECRET!) as any;
     userId = Number(payload.id);
-  } catch (e) {
-    return res.status(401).send({ message: 'Invalid token' });
-  }
 
-  try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -44,20 +41,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    if (!user) {
-      return res.status(404).send({ message: 'User not found' });
-    }
-
     if (user) {
       delete (user as any).password;
-      res.status(200).json(user);
+      return res.status(200).json(user);
     } else {
-      res.status(404).send({ message: 'User not found' });
+      return res.status(404).send({ message: 'User not found' });
     }
 
     res.status(200).json(user);
   } catch (error) {
     console.error('Error fetching user resume:', error);
+    res.status(401).send({ message: 'Invalid token' });
     res.status(500).send({ message: 'Internal server error' });
   }
 }
