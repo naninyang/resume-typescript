@@ -1,12 +1,21 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_SECRET } from '@/components/hooks/envs';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
-  const { userid, password } = req.body;
+type RequestBody = {
+  userid: string;
+  password: string;
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { userid, password } = req.body as RequestBody;
 
   try {
     const user = await prisma.user.findUnique({
@@ -20,7 +29,7 @@ export default async function handler(req, res) {
 
       if (match) {
         const payload = { id: user.id };
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '14d' });
+        const token = jwt.sign(payload, JWT_SECRET as string, { expiresIn: '14d' });
 
         res.status(200).json({ status: 'success', token });
       } else {

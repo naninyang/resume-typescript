@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { verify } from 'jsonwebtoken';
 import { JWT_SECRET } from '@/components/hooks/envs';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
     return res.status(405).end();
   }
@@ -14,14 +15,13 @@ export default async function handler(req, res) {
     return res.status(401).send({ message: 'Unauthorized' });
   }
 
-  let payload;
+  let userId: number;
   try {
-    payload = verify(token, JWT_SECRET);
+    const payload = verify(token, JWT_SECRET!) as any;
+    userId = Number(payload.id);
   } catch (e) {
     return res.status(401).send({ message: 'Invalid token' });
   }
-
-  const userId = payload.id;
 
   try {
     const user = await prisma.user.findUnique({
@@ -44,10 +44,15 @@ export default async function handler(req, res) {
       }
     });
 
-    delete user.password;
-
     if (!user) {
       return res.status(404).send({ message: 'User not found' });
+    }
+
+    if (user) {
+      delete (user as any).password;
+      res.status(200).json(user);
+    } else {
+      res.status(404).send({ message: 'User not found' });
     }
 
     res.status(200).json(user);

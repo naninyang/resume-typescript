@@ -1,10 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
-  const { userid, username, email, password } = req.body;
+type ResponseData = {
+  status: string;
+  data?: number;
+  error?: string;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+  const { userid, username, email, password } = req.body as {
+    userid: string;
+    username: string;
+    email: string;
+    password: string;
+  };
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -22,6 +34,6 @@ export default async function handler(req, res) {
     res.status(200).json({ status: 'success', data: newUser.id });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ status: 'error', error: 'Internal Server Error' });
   }
 }

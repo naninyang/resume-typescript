@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import { verify } from 'jsonwebtoken';
+import { verify, JwtPayload } from 'jsonwebtoken';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_SECRET } from '@/components/hooks/envs';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -14,7 +15,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const payload = verify(token, JWT_SECRET);
+      const payload = verify(token, JWT_SECRET!) as any;
 
       const user = await prisma.user.findUnique({
         where: { id: payload.id },
@@ -52,8 +53,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const payload = verify(token, JWT_SECRET);
-
+      const payload = verify(token, JWT_SECRET!) as any;
       const user = await prisma.user.findUnique({
         where: { id: payload.id },
       });

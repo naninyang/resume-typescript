@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import { verify } from 'jsonwebtoken';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { verify, JwtPayload } from 'jsonwebtoken';
 import { JWT_SECRET } from '@/components/hooks/envs';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
       const militaryServices = await prisma.military_service.findMany();
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
         return;
       }
 
-      const payload = verify(token, JWT_SECRET);
+      const payload = verify(token, JWT_SECRET!) as any;
 
       const {
         militaryStats,
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
       } = req.body;
 
       const militaryService = await prisma.military_service.findUnique({
-        where: { userId: payload.id },
+        where: { userId: Number(payload.id) },
       });
 
       if (!militaryService) {
@@ -52,12 +53,12 @@ export default async function handler(req, res) {
             discharge: discharge,
             start_date: startDate,
             end_date: endDate,
-            user: { connect: { id: payload.id } },
+            user: { connect: { id: Number(payload.id) } },
           },
         });
       } else {
         await prisma.military_service.update({
-          where: { userId: payload.id },
+          where: { userId: Number(payload.id) },
           data: {
             military_stats: militaryStats,
             military_show: militaryShow,
