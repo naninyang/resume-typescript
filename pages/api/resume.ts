@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { verify } from 'jsonwebtoken';
-import { JWT_SECRET } from '@/components/hooks/envs';
+import { verify, JsonWebTokenError } from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { JWT_SECRET } from '@/components/hooks/envs';
 
 const prisma = new PrismaClient();
 
@@ -15,11 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).send({ message: 'Unauthorized' });
   }
 
-  let userId: number;
-
   try {
     const payload = verify(token, JWT_SECRET!) as any;
-    userId = Number(payload.id);
+
+    const userId: number = Number(payload.id);
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -48,10 +47,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).send({ message: 'User not found' });
     }
 
-    res.status(200).json(user);
   } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      return res.status(200).send({ message: 'Invalid token' });
+    }
+
     console.error('Error fetching user resume:', error);
-    res.status(401).send({ message: 'Invalid token' });
-    res.status(500).send({ message: 'Internal server error' });
+    return res.status(500).send({ message: 'Internal server error' });
   }
 }

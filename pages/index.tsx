@@ -158,7 +158,7 @@ const Home: NextPage<HomeProps> = ({ mdx }) => {
       const token = localStorage.getItem('token');
       const response = await axios.get('/api/resume', { headers: { Authorization: `Bearer ${token}` } });
       setResumeData(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch resume:', error);
     }
   };
