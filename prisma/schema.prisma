@@ -36,7 +36,7 @@ model user {
 
 model education {
   id         Int     @id @default(autoincrement())
-  school     String  @unique
+  school     String
   major      String
   category   String
   stats      String
@@ -99,7 +99,7 @@ model award {
 
 model certificate {
   id               Int    @id @default(autoincrement())
-  certificate_name String @unique
+  certificate_name String
   organization     String
   issue_date       String
   certificate_num  String
@@ -109,7 +109,7 @@ model certificate {
 
 model skill {
   id           Int    @id @default(autoincrement())
-  skill_name   String @unique
+  skill_name   String
   skill_level  Int
   skill_career Int
   userId       Int?
@@ -152,7 +152,7 @@ model career {
 
 model project {
   id           Int     @id @default(autoincrement())
-  project_name String  @unique
+  project_name String
   start_date   String
   end_date     String?
   description  String?
