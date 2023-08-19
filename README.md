@@ -1,16 +1,19 @@
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+- The current project only supports Korean.
 - 본 프로젝트는 개인용으로 사용하기 위해 만들어진 프로젝트입니다.
 - 본 프로젝트는 https://github.com/naninyang/resume 저장소를 `TypeScript`로 변환한 프로젝트입니다.
 - TypeScript로 변환하면서 발견된 버그들을 fix 한 버전이기 때문에 원본보다 버그가 덜합니다. (...)
 - `CHAT-GPT`의 `GPT-4` 모델의 도움을 받아 프로그래밍 되었습니다.
 - 이력서에 필요한 데이터를 관리하며, 데이터들을 통해 프린트 또는 PDF로 만들어서 관리할 수 있습니다.
 - `Next.js`로 만들어진 프로젝트이기 때문에 `Node`, `React`, `Next.js`등의 환경에 대해 이해도가 있어야 사용 가능합니다.
+- 병역사항 입력 필드의 종류는 Male Friend의 도움을 받아 제작되었습니다. (정부24에 들어가서 직접 관련 서류를 뽑아봤다고 함)
 
 ## Getting Started
 
 ```bash
 git clone git@github.com:naninyang/resume-typescript.git
 cd resume-typescript
+yarn add
 md public/uploads
 yarn auth
 ```
@@ -19,7 +22,6 @@ yarn auth
 
 ```bash
 cp .env.next .env
-mv .env
 vi .env
 ```
 
