@@ -3,7 +3,6 @@ import Head from 'next/head'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/components/hooks/authContext'
-import useModal from '@/components/hooks/useModal';
 import { ButtonGroup, Container, Content, FieldGroup, FormGroup, ManagementContainer } from '@/styles/manageSystem';
 import IsNotSession from './isNotSession';
 import { Rem, hex } from '@/styles/designSystem';

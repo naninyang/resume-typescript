@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, MouseEvent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
 import { Rem, hex, rgba } from '@/styles/designSystem';
@@ -80,10 +80,17 @@ const ConfirmFooter = styled.div({
   },
 })
 
-export default function Confirm({ isOpen, title, onClose, message }) {
+interface ConfirmProps {
+  isOpen: boolean;
+  title: string;
+  onClose: () => void;
+  message: ReactNode;
+}
+
+export default function Confirm({ isOpen, title, onClose, message }: ConfirmProps) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      document.body.style.overflow = isOpen ? 'hidden' : null;
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
     return () => {
@@ -94,9 +101,13 @@ export default function Confirm({ isOpen, title, onClose, message }) {
   }, [isOpen]);
 
   if (!isOpen) return null;
-  const handleMouseDown = (event) => {
+
+  const handleMouseDown = (event: MouseEvent) => {
     event.stopPropagation();
   }
+
+  const modalRoot = document.getElementById('__next');
+  if (!isOpen || !modalRoot) return null;
 
   return createPortal(
     <ConfirmDialog open onMouseDown={handleMouseDown}>
@@ -119,6 +130,6 @@ export default function Confirm({ isOpen, title, onClose, message }) {
         </ConfirmFooter>
       </ConfirmContent>
     </ConfirmDialog>,
-    document.getElementById('__next')
+    modalRoot
   );
 };

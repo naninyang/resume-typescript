@@ -779,7 +779,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:>=16":
+"@types/react-dom@npm:^18.2.7":
+  version: 18.2.7
+  resolution: "@types/react-dom@npm:18.2.7"
+  dependencies:
+    "@types/react": "*"
+  checksum: e02ea908289a7ad26053308248d2b87f6aeafd73d0e2de2a3d435947bcea0422599016ffd1c3e38ff36c42f5e1c87c7417f05b0a157e48649e4a02f21727d54f
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*, @types/react@npm:>=16":
   version: 18.2.20
   resolution: "@types/react@npm:18.2.20"
   dependencies:
@@ -5312,6 +5321,7 @@ __metadata:
     "@types/js-cookie": ^3.0.3
     "@types/jsonwebtoken": ^9.0.2
     "@types/multer": ^1.4.7
+    "@types/react-dom": ^18.2.7
     "@types/webfontloader": ^1.6.35
     "@unly/utils": ^1.0.3
     axios: ^1.4.0
@@ -5328,7 +5338,6 @@ __metadata:
     next-mdx-remote: ^4.4.1
     nodemailer: ^6.9.3
     prisma: 5.1.1
-    prop-types: ^15.8.1
     react: 18.2.0
     react-dom: ^18.2.0
     react-dropzone: ^14.2.3
