@@ -110,11 +110,14 @@ export default function Confirm({ isOpen, title, onClose, message }: ConfirmProp
   if (!isOpen || !modalRoot) return null;
 
   return createPortal(
-    <ConfirmDialog open onMouseDown={handleMouseDown}>
+    <ConfirmDialog
+      aria-labelledby='dialog-heading'
+      onMouseDown={handleMouseDown}
+    >
       <ConfirmBackdrop onClick={onClose} />
       <ConfirmContent>
         <ConfirmBody>
-          <h2>{title}</h2>
+          <h2 id='dialog-heading'>{title}</h2>
           <div className='message'>
             {message}
           </div>
