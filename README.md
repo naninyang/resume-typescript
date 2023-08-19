@@ -1,5 +1,8 @@
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 - 본 프로젝트는 개인용으로 사용하기 위해 만들어진 프로젝트입니다.
+- 본 프로젝트는 https://github.com/naninyang/resume 저장소를 `TypeScript`로 변환한 프로젝트입니다.
+- TypeScript로 변환하면서 발견된 버그들을 fix 한 버전이기 때문에 원본보다 버그가 덜합니다. (...)
+- `CHAT-GPT`의 `GPT-4` 모델의 도움을 받아 프로그래밍 되었습니다.
 - 이력서에 필요한 데이터를 관리하며, 데이터들을 통해 프린트 또는 PDF로 만들어서 관리할 수 있습니다.
 - `Next.js`를 `clone`해서 사용해야 하기 때문에 `Node`, `React`, `Next.js`등의 환경에 대해 이해도가 있어야 사용 가능합니다.
 
